@@ -1,0 +1,20 @@
+{% extends "testApp/base.html" %}
+
+{% block content %}
+
+	<h1>Comidas home!</h1>
+	 <a align = "right" class="btn btn-outline-info" href="{% url 'testApp-create' %}">Agregar Comida!</a>
+	 <p></p>
+	{% for comida in comidas %}
+		<article class="media content-section">
+		  <div class="media-body">
+		    <h2><p class="article-title">{{ comida.name }}</p></h2>
+		    <p class="article-content">{{ comida.description }}</p>
+		    <a align = "right" class="btn btn-outline-secondary" href="comida/{{ comida.pk }}/update">Modificar</a>
+		    <a align = "right" class="btn btn-outline-danger" href="comida/{{ comida.pk }}/delete">Eliminar</a>
+		  </div>
+		</article>
+		
+	{% endfor %}
+
+{% endblock content %}

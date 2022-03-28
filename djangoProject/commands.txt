@@ -1,0 +1,2 @@
+docker build --tag gsempol/python-django .
+docker run -p 8000:8000 gsempol/python-django

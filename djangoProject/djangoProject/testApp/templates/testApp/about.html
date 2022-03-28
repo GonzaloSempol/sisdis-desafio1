@@ -1,0 +1,18 @@
+{% extends "testApp/base.html" %}
+{% block content %}
+{% load static %}
+	<h1>Comidas about!</h1>
+	<h3>Desafio 1 - C/S en 3 tiers</h3>
+	<h4>Cada tier corriendo en un contenedor</h4>
+	<p></p>
+	<img src="{% static 'testApp/arquitectura.png' %}" width="100%"></img>
+	<ul>
+	<li>Servidor web proxy nginx</li>
+	<li>Aplicación en django</li>
+	<li>Base en PostgreSQL</li>
+	</ul>
+	<p></p>
+	<h5>Sistemas Distribuidos - Universidad Católica</h5>
+	<a href="https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p">Aplicación basada en el código de tutorial de django de Corey Schafer </a>
+
+{% endblock content %}

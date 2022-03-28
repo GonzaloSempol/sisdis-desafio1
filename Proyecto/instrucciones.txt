@@ -1,0 +1,13 @@
+pararse en esta carpeta con el cmd o powershell y ejecutar
+docker-compose up
+
+acceder a localhost desde un navegador!
+Tambien puede accederse desde otro pc de la red
+
+:: en bd-persist se guarda la base (si se borra hay que entrar al djangoserver y ejecutar en /app el comando python manage.py migrate para regenerar las tablas
+:: en nginx-persist se guarda la config del nginx para hacer de proxy reverso por si quiere verse.
+
+:: Intente que los contenedores levanten en orden en el compose usando  depends_on 
+pero puede pasar que el orden de los contenedores no sea el esperado y levante la base al final,y ahi se rompe todo.
+en ese caso hacer docker ps, stopear la el django y levantarlo de nuevo.
+

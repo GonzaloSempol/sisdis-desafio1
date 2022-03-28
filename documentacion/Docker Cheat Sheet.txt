@@ -1,0 +1,98 @@
+---------------------------
+Cheat Sheet de Docker
+----------------------------
+docker images | head //las imagenes que tenemos bajadas
+docker run -d IMAGEN  //corremo la imagen en modo detach
+docker run -d -p 3000:3000 IMAGEN //mapeo el puerto 3000 de mi pc al 3000 del contenedor
+docker pull //traer de repo pero no correr
+docker ps	 //los que corren actualmente
+docker ps -a // los que han corrido
+docker logs nombre-o-ID //veo toda la salida, si le pongo -f se queda esperando, la app deberia escribir en stdout para no escribir logs y el docker lo trae.
+docker exec -it nombreoID sh //Interactive Terminal, y al final ponemos sh o /bin/bash depende de la distribucion de linux
+docker stop nombreoID
+docker kill nombreoID //menos amistoso que el anterior
+docker start CointainerID //si lo cortamos sin querer hacemos docker ps -a para encontrar el id y lo resumimos.
+docker images //imagenes bajadas y creadas por nosotros
+docker build -t miTagcito . //cuando tenemos dockerfile con esto hacemos un build
+docker tag ID nuevoTag //para re taguear
+docker login //para poder subir tenemos que estar logueados
+docker push IMAGEN //para subirla al repo de docker hub (hay que nombrarla nombredeusuario/imagen)	
+---
+---------
+Volumenes
+----------
+docker run -v /Users/kbs/ejemplo:/etc/todos:ro -p 3000:3000 -d //si (agregamos :ro read only) el contenedor no puede modificar
+si quiero varios Volumenes, pongo varios -v
+si modifique cosas dentro de la imagen
+puedo hacer docker build -t miTagcitoLindo:v2 y como es por capas me genera la imagen y actualiza los cambios 
+---
+
+
+---------------------------------
+Networks y Multiples contenedores
+----------------------------------
+docker network create miRed //creo una red
+docker run -d \
+--network miRed --network-alias elHostName \
+-v midirectorio:/var/lib/mysql \  							//en /var/lib/mysql se guarda la data 
+																		//de la base me lo persisto en mi maquina
+-e MYSQL_ROOT_PASSWORD=secret \					//variables de entorno para que el container se configure
+-e MYSQL_DATABASE=miBaseDeDatos \
+mysql:5.7 															//la imagen
+
+
+una vez lo tengo corriendo puedo hacer
+docker exec -it idDelContenedor mysql -p 		//aqui ejecuto el comando mysql dentro del contenedor y le puedo hacer un show 														//databases; por ejemplo
+---
+
+---------------------------
+DockerFile //se usa para hacer builds
+---------------------------
+FROM node:12.22.1-alpine3.11 //Aqui pongo la imagen y la version en que voy a basarme
+
+WORKDIR /app //Aqui cual va a ser el directorio de trabajo
+COPY . . //copio todo lo de mi directorio del DockerFile en el que está este script a el WORKDIR del contenedor.
+RUN yarn install --production //Aqui compilo mi programa en este caso es para compilar algo en nodejs 
+
+CMD ["node", "/app/src/index.js"] //Esto siempre debe ir al final y especifica lo que voy a correr al iniciar el contenedor. comando node, con el /app.. etc como argumento.
+
+Tambien en vez de CMD podria poner ENTRYPOINT para que luego al correr la imagen le pueda pasar un parametro a la imagen
+
+para construir el contenedor, le hago un 
+docker build -t miTagcitoLindo . 
+//parados donde esté el DockerFile
+
+
+-----------------------------------
+Docker Compose //se usa para levantar varios contenedores de una en una red
+docker-compose.yaml
+-----------------------------------
+Varios contenedores y los manejamos con un solo archivo, crea una nueva red automaticamente y mete los contenedores.
+Automaticamente le crea el hostname ncon el nombre del servicio, en este ejemplo seria app y mysql.
+
+
+version: "3.7" //version de la sintaxis
+services:
+	app:
+		imagen:nombreImagen
+		ports:
+		  - 3000:3000
+		environment:
+			MYSQL_HOST: mysql
+			MYSQL_USER: root
+			MYSQL_PASSWORD: secret
+			MYSQL_DB: miBase
+	mysql:
+		image: mysql:5.7
+		volumes:
+		 - ./mivolumen:/var/lib/mysql
+		 environment:
+		   MYSQL_ROOT_PASSWORD: secret
+		   MYSQL_DATABASE: miBase
+
+
+
+para correr esto parados donde este el .yaml hacemos un:
+docker-compose up -d
+y si queremos bajarlo hacemos
+docker-compose down

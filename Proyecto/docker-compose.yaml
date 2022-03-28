@@ -1,0 +1,30 @@
+services:
+
+  postgresql-server: 
+    image: postgres:14.2-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postre
+      POSTGRES_USER: postre
+      POSTGRES_DB: comidas
+    volumes:
+      - './bd-persist:/var/lib/postgresql/data' #persistencia de la base 
+ 
+
+  nginx-server:
+    image: nginx:1.21.6-alpine
+    ports:
+     - 80:80
+    volumes: 
+     - './nginx-persist:/etc/nginx/conf.d' #config del nginx  
+    depends_on:
+      - postgresql-server
+
+  python-django-appServer:
+    image: gsempol/desafio1-python-django
+    ports:
+      - 8000:8000
+    depends_on:
+      - nginx-server
+     

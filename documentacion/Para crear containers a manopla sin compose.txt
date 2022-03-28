@@ -1,0 +1,13 @@
+
+docker network create miRed
+
+--django 
+docker run -p:8000:8000 --network miRed --network-alias python-django-appServer gsempol/python-django
+
+--postgresql
+docker run -v "C:\Users\TMeX\Google Drive\Universidad Catolica\Cursando\Sistemas Distribuidos\Desafio 1\bd-persist":/var/lib/postgresql/data -e POSTGRES_PASSWORD=postre -e POSTGRES_USER=postre -e POSTGRES_DB=comidas -p 5432:5432  --network miRed --network-alias postgresql-server -d  postgres:14.2-alpine
+
+--nginx
+docker run -v "C:\Users\TMeX\Google Drive\Universidad Catolica\Cursando\Sistemas Distribuidos\Desafio 1\nginx-persist":/etc/nginx/conf.d -p 80:80 --network miRed --network-alias nginx-server nginx:1.21.6-alpine
+
+

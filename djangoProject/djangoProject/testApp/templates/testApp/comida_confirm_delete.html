@@ -1,0 +1,16 @@
+{% extends "testApp/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Borrar Comida {{ object.name}}</legend>
+                <h3>Seguro?</h3>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Si, Borrar</button>
+                <a class="btn btn-outline-secondary" href="{% url 'testApp-home' %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
